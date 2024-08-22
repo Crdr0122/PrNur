@@ -3,7 +3,6 @@
 , unzip
 , oraclejre8
 , makeWrapper
-, openal
 , libjportaudio
 , xrandr
 }:
@@ -69,8 +68,6 @@ stdenv.mkDerivation rec {
 
     # prefix: 在原有的环境变量前添加
     wrapProgram $out/bin/beatoraja \
-    --prefix LD_LIBRARY_PATH : "${openal}/lib" \
-      --prefix LD_PRELOAD : "${openal}/lib/libopenal.so" \
       --prefix LD_LIBRARY_PATH : "${libjportaudio}/lib" \
       --prefix LD_PRELOAD : "${libjportaudio}/lib/libjportaudio.so" \
        --prefix PATH : "${xrandr}/bin" \

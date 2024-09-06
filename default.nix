@@ -6,16 +6,18 @@
 # commands such as:
 #     nix-build -A mypackage
 
-{ pkgs ? import <nixpkgs> { } }:
+{
+  pkgs ? import <nixpkgs> { },
+}:
 
-rec{
+rec {
   # The `lib`, `modules`, and `overlays` names are special
   lib = import ./lib { inherit pkgs; }; # functions
   modules = import ./modules; # NixOS modules
   overlays = import ./overlays; # nixpkgs overlays
 
   example-package = pkgs.callPackage ./pkgs/example-package { };
-  beatoraja = pkgs.callPackage ./pkgs/beatoraja { libjportaudio = libjportaudio;};
+  beatoraja = pkgs.callPackage ./pkgs/beatoraja { libjportaudio = libjportaudio; };
   libjportaudio = pkgs.callPackage ./pkgs/libjportaudio { };
   # some-qt5-package = pkgs.libsForQt5.callPackage ./pkgs/some-qt5-package { };
   # ...

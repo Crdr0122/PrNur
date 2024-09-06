@@ -1,12 +1,13 @@
-{ lib
-, stdenv
-, fetchzip
-, jdk
-, writeShellScript
-, openal
-, xrandr
-, makeWrapper
-, libjportaudio
+{
+  lib,
+  stdenv,
+  fetchzip,
+  jdk,
+  writeShellScript,
+  openal,
+  xrandr,
+  makeWrapper,
+  libjportaudio,
 }:
 
 let
@@ -23,7 +24,9 @@ let
       find "$dataDir" -type d -exec chmod 755 {} \;
     fi
     cd "''${XDG_DATA_HOME:-$HOME/.local/share}/beatoraja"
-    exec ${jdk.override { enableJavaFX = true; }}/bin/java -Xms1g -Xmx4g -jar $out/opt/beatoraja/beatoraja.jar $@
+    exec ${
+      jdk.override { enableJavaFX = true; }
+    }/bin/java -Xms1g -Xmx4g -jar $out/opt/beatoraja/beatoraja.jar $@
   '';
 
 in
@@ -66,7 +69,10 @@ stdenv.mkDerivation {
   meta = with lib; {
     description = "Cross-platform rhythm game based on Java and libGDX.";
     homepage = "https://github.com/exch-bms2/beatoraja";
-    license = [ licenses.gpl3Only "unknown" ];
+    license = [
+      licenses.gpl3Only
+      "unknown"
+    ];
     platforms = [ "x86_64-linux" ];
     mainProgram = "beatoraja";
     sourceProvenance = with sourceTypes; [ binaryBytecode ];

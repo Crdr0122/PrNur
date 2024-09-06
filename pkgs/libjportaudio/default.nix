@@ -1,8 +1,9 @@
-{ stdenv
-, fetchFromGitHub
-, jdk
-, cmake
-, portaudio
+{
+  stdenv,
+  fetchFromGitHub,
+  jdk,
+  cmake,
+  portaudio,
 }:
 
 let
@@ -19,7 +20,10 @@ stdenv.mkDerivation rec {
     sha256 = "t+Pqtgstd1uJjvD4GKomZHMeSECNLeQJOrz97o+lV2Q=";
   };
 
-  nativeBuildInputs = [ cmake portaudio ];
+  nativeBuildInputs = [
+    cmake
+    portaudio
+  ];
 
   preConfigure = ''
     export JAVA_HOME=${jdk}

@@ -41,7 +41,7 @@ src = fetchFromGitLab {
         domain = "gitlab.gnome.org";
         owner = "GNOME";
         repo = "vte";
-        rev = "3c8f66be867aca6656e4109ce880b6ea7431b895";
+        rev = "c90b078ecf4382458a9af44d765d710eb46b0453";
         hash = "sha256-vz9ircmPy2Q4fxNnjurkgJtuTSS49rBq/m61p1B43eU=";
       };
 

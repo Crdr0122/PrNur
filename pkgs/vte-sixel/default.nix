@@ -42,7 +42,7 @@ src = fetchFromGitLab {
         owner = "GNOME";
         repo = "vte";
         rev = "c90b078ecf4382458a9af44d765d710eb46b0453";
-        hash = "sha256-vz9ircmPy2Q4fxNnjurkgJtuTSS49rBq/m61p1B43eU=";
+        hash = "sha256-ApZtnRr07HS/Q0klRZuYu/+nX+mcBzbtAbPLG5UkVtg=";
       };
 
   patches = [

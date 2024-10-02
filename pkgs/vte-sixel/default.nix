@@ -1,49 +1,52 @@
-{ stdenv
-, lib
-, fetchFromGitLab
-, libsixel
-, fetchpatch
-, gettext
-, pkg-config
-, meson
-, ninja
-, gnome
-, glib
-, gtk3
-, gtk4
-, gtkVersion ? "3"
-, gobject-introspection
-, vala
-, python3
-, gi-docgen
-, libxml2
-, gnutls
-, gperf
-, pango
-, pcre2
-, cairo
-, fribidi
-, lz4
-, icu
-, systemd
-, systemdSupport ? lib.meta.availableOn stdenv.hostPlatform systemd
-, nixosTests
-, blackbox-terminal
+{
+  stdenv,
+  lib,
+  fetchFromGitLab,
+  libsixel,
+  fetchpatch,
+  gettext,
+  pkg-config,
+  meson,
+  ninja,
+  gnome,
+  glib,
+  gtk3,
+  gtk4,
+  gtkVersion ? "3",
+  gobject-introspection,
+  vala,
+  python3,
+  gi-docgen,
+  libxml2,
+  gnutls,
+  gperf,
+  pango,
+  pcre2,
+  cairo,
+  fribidi,
+  lz4,
+  icu,
+  systemd,
+  systemdSupport ? lib.meta.availableOn stdenv.hostPlatform systemd,
+  nixosTests,
+  blackbox-terminal,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "vte";
   version = "0.76.3";
 
-  outputs = [ "out" "dev" ]
-    ++ lib.optional (gtkVersion != null) "devdoc";
-src = fetchFromGitLab {
-        domain = "gitlab.gnome.org";
-        owner = "GNOME";
-        repo = "vte";
-        rev = "c90b078ecf4382458a9af44d765d710eb46b0453";
-        hash = "sha256-ApZtnRr07HS/Q0klRZuYu/+nX+mcBzbtAbPLG5UkVtg=";
-      };
+  outputs = [
+    "out"
+    "dev"
+  ] ++ lib.optional (gtkVersion != null) "devdoc";
+  src = fetchFromGitLab {
+    domain = "gitlab.gnome.org";
+    owner = "GNOME";
+    repo = "vte";
+    rev = "3c8f66be867aca6656e4109ce880b6ea7431b895";
+    hash = "sha256-vz9ircmPy2Q4fxNnjurkgJtuTSS49rBq/m61p1B43eU=";
+  };
 
   patches = [
     # VTE needs a small patch to work with musl:
@@ -69,42 +72,51 @@ src = fetchFromGitLab {
     gi-docgen
   ];
 
-  buildInputs = [
-    cairo
-    fribidi
-    gnutls
-    libsixel
-    pango # duplicated with propagatedBuildInputs to support gtkVersion == null
-    pcre2
-    lz4
-    icu
-  ] ++ lib.optionals systemdSupport [
-    systemd
-  ];
+  buildInputs =
+    [
+      cairo
+      fribidi
+      gnutls
+      libsixel
+      pango # duplicated with propagatedBuildInputs to support gtkVersion == null
+      pcre2
+      lz4
+      icu
+    ]
+    ++ lib.optionals systemdSupport [
+      systemd
+    ];
 
   # Required by vte-2.91.pc.
   propagatedBuildInputs = lib.optionals (gtkVersion != null) [
-    (assert (gtkVersion == "3" || gtkVersion == "4");
-    if gtkVersion == "3" then gtk3 else gtk4)
+    (
+      assert (gtkVersion == "3" || gtkVersion == "4");
+      if gtkVersion == "3" then gtk3 else gtk4
+    )
     glib
     pango
   ];
 
-  mesonFlags = [
-    "-Ddocs=true"
-    (lib.mesonBool "gtk3" (gtkVersion == "3"))
-    (lib.mesonBool "gtk4" (gtkVersion == "4"))
-    "-Dsixel=true"
-  ] ++ lib.optionals (!systemdSupport) [
-    "-D_systemd=false"
-  ] ++ lib.optionals stdenv.hostPlatform.isDarwin [
-    # -Bsymbolic-functions is not supported on darwin
-    "-D_b_symbolic_functions=false"
-  ];
+  mesonFlags =
+    [
+      "-Ddocs=true"
+      (lib.mesonBool "gtk3" (gtkVersion == "3"))
+      (lib.mesonBool "gtk4" (gtkVersion == "4"))
+      "-Dsixel=true"
+    ]
+    ++ lib.optionals (!systemdSupport) [
+      "-D_systemd=false"
+    ]
+    ++ lib.optionals stdenv.hostPlatform.isDarwin [
+      # -Bsymbolic-functions is not supported on darwin
+      "-D_b_symbolic_functions=false"
+    ];
 
   # error: argument unused during compilation: '-pie' [-Werror,-Wunused-command-line-argument]
-  env.NIX_CFLAGS_COMPILE = toString (lib.optional stdenv.hostPlatform.isMusl "-Wno-unused-command-line-argument"
-    ++ lib.optional stdenv.cc.isClang "-Wno-cast-function-type-strict");
+  env.NIX_CFLAGS_COMPILE = toString (
+    lib.optional stdenv.hostPlatform.isMusl "-Wno-unused-command-line-argument"
+    ++ lib.optional stdenv.cc.isClang "-Wno-cast-function-type-strict"
+  );
 
   postPatch = ''
     patchShebangs perf/*
@@ -124,7 +136,17 @@ src = fetchFromGitLab {
       versionPolicy = "odd-unstable";
     };
     tests = {
-      inherit (nixosTests.terminal-emulators) gnome-terminal lxterminal mlterm roxterm sakura stupidterm terminator termite xfce4-terminal;
+      inherit (nixosTests.terminal-emulators)
+        gnome-terminal
+        lxterminal
+        mlterm
+        roxterm
+        sakura
+        stupidterm
+        terminator
+        termite
+        xfce4-terminal
+        ;
       blackbox-terminal = blackbox-terminal.override { sixelSupport = true; };
     };
   };
@@ -141,7 +163,13 @@ src = fetchFromGitLab {
       the system's terminfo database.
     '';
     license = licenses.lgpl3Plus;
-    maintainers = with maintainers; [ astsmtl antono ] ++ teams.gnome.members;
+    maintainers =
+      with maintainers;
+      [
+        astsmtl
+        antono
+      ]
+      ++ teams.gnome.members;
     platforms = platforms.unix;
   };
 })

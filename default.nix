@@ -19,6 +19,8 @@ rec {
   example-package = pkgs.callPackage ./pkgs/example-package { };
   beatoraja = pkgs.callPackage ./pkgs/beatoraja { libjportaudio = libjportaudio; };
   libjportaudio = pkgs.callPackage ./pkgs/libjportaudio { };
+  vte-sixel = pkgs.callPackage ./pkgs/vte-sixel{ };
+  # xfce4-terminal = pkgs.callPackage ./pkgs/xfce4-terminal{ };
   # some-qt5-package = pkgs.libsForQt5.callPackage ./pkgs/some-qt5-package { };
   # ...
 }

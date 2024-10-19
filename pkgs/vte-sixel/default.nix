@@ -8,7 +8,6 @@
   pkg-config,
   meson,
   ninja,
-  gnome,
   glib,
   gtk3,
   gtk4,
@@ -28,8 +27,6 @@
   icu,
   systemd,
   systemdSupport ? lib.meta.availableOn stdenv.hostPlatform systemd,
-  nixosTests,
-  blackbox-terminal,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -46,7 +43,7 @@ stdenv.mkDerivation (finalAttrs: {
     repo = "vte";
     rev = "3c8f66be867aca6656e4109ce880b6ea7431b895";
     hash = "sha256-vz9ircmPy2Q4fxNnjurkgJtuTSS49rBq/m61p1B43eU=";
-  };
+  }; #Piggybacking off of blackbox_terminal in nixpkgs
 
   patches = [
     # VTE needs a small patch to work with musl:
@@ -130,27 +127,6 @@ stdenv.mkDerivation (finalAttrs: {
     moveToOutput "share/doc" "$devdoc"
   '';
 
-  passthru = {
-    updateScript = gnome.updateScript {
-      packageName = "vte";
-      versionPolicy = "odd-unstable";
-    };
-    tests = {
-      inherit (nixosTests.terminal-emulators)
-        gnome-terminal
-        lxterminal
-        mlterm
-        roxterm
-        sakura
-        stupidterm
-        terminator
-        termite
-        xfce4-terminal
-        ;
-      blackbox-terminal = blackbox-terminal.override { sixelSupport = true; };
-    };
-  };
-
   meta = with lib; {
     homepage = "https://www.gnome.org/";
     description = "Library implementing a terminal emulator widget for GTK";
@@ -161,15 +137,9 @@ stdenv.mkDerivation (finalAttrs: {
       console/terminal in games, editors, IDEs, etc. VTE supports Unicode and
       character set conversion, as well as emulating any terminal known to
       the system's terminfo database.
+      This package supports sixel.
     '';
     license = licenses.lgpl3Plus;
-    maintainers =
-      with maintainers;
-      [
-        astsmtl
-        antono
-      ]
-      ++ teams.gnome.members;
     platforms = platforms.unix;
   };
 })

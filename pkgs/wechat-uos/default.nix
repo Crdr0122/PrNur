@@ -34,6 +34,7 @@
   ...
 }:
 ################################################################################
+# Copied from xddxdd nur repo
 # Mostly based on wechat-uos-bwrap package from AUR:
 # https://aur.archlinux.org/packages/wechat-uos-bwrap
 ################################################################################

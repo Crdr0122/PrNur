@@ -12,7 +12,7 @@
 
 let
   pname = "beatoraja-modernchic";
-  version = "0.8.7";
+  version = "0.8.8";
   fullName = "beatoraja${version}-modernchic";
   startupScript = writeShellScript "beatoraja.sh" ''
     export _JAVA_OPTIONS='-Dsun.java2d.opengl=true -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
@@ -35,7 +35,7 @@ stdenv.mkDerivation {
   name = "${pname}-${version}";
   src = fetchzip {
     url = "https://mocha-repository.info/download/${fullName}.zip";
-    hash = "sha256-pQo/jWIMMT6btwsaO6wJbAPRCun+44GUPk0NMVpQcyc=";
+    hash = "sha256-aw5jvYccH+Mnus2G9f7hTAMuC+HdjR6I8pzYDrOm98E=";
   };
 
   nativeBuildInputs = [ makeWrapper ];

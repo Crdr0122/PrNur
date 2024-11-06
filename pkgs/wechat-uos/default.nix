@@ -1,4 +1,5 @@
 {
+  sources,
   stdenv,
   buildFHSUserEnvBubblewrap,
   writeShellScript,
@@ -51,7 +52,6 @@
   zlib,
 }:
 ################################################################################
-# Copied from xddxdd nur repo
 # Mostly based on wechat-uos-bwrap package from AUR:
 # https://aur.archlinux.org/packages/wechat-uos-bwrap
 ################################################################################
@@ -145,6 +145,7 @@ let
       url = "https://home-store-packages.uniontech.com/appstore/pool/appstore/c/com.tencent.wechat/com.tencent.wechat_4.0.0.21_amd64.deb";
       hash = "sha256-1tO8ARt2LuCwPz7rO25/9dTOIf9Rwqc9TdqiZTTojRk=";
     };
+
     nativeBuildInputs = [ dpkg ];
 
     installPhase = ''
@@ -279,7 +280,7 @@ stdenv.mkDerivation {
 
   meta = {
     mainProgram = "wechat-uos";
-    maintainers = with lib.maintainers; [ xddxdd ];
+    # maintainers = with lib.maintainers; [ xddxdd ];
     description =
       if enableSandbox then
         "WeChat desktop with sandbox enabled ($HOME/Documents/WeChat_Data) (Adapted from https://aur.archlinux.org/packages/wechat-uos-bwrap)"

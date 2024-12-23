@@ -1,5 +1,4 @@
 {
-  sources,
   stdenv,
   buildFHSUserEnvBubblewrap,
   writeShellScript,

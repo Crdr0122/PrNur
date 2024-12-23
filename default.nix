@@ -21,6 +21,7 @@ rec {
   libjportaudio = pkgs.callPackage ./pkgs/libjportaudio { };
   vte-sixel = pkgs.callPackage ./pkgs/vte-sixel { };
   wechat-uos = pkgs.callPackage ./pkgs/wechat-uos { };
+  quickq = pkgs.callPackage ./pkgs/quickq { };
   # xfce4-terminal = pkgs.callPackage ./pkgs/xfce4-terminal{ };
   # some-qt5-package = pkgs.libsForQt5.callPackage ./pkgs/some-qt5-package { };
   # ...

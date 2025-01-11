@@ -43,8 +43,8 @@ stdenv.mkDerivation (finalAttrs: {
     owner = "GNOME";
     repo = "vte";
     rev = "f436ad8b9dee798d0b6fa15a841a5384202d5372";
-    hash = "sha256-zIYhFHa1zEUtsRvxtCNi/ddAswsD64K6iqjYVD68tic=";
-  }; 
+    hash = "sha256-vz9ircmPy2Q4fxNnjurkgJtuTSS49rBq/m61p1B43eU=";
+  }; # Piggybacking off of blackbox_terminal in nixpkgs
 
   patches = [
     # VTE needs a small patch to work with musl:

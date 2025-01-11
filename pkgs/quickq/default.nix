@@ -6,7 +6,6 @@
   dpkg,
   #libs
   glib,
-  fontconfig,
   nss,
   xorg,
   libgcc,
@@ -22,6 +21,7 @@
   libudev0-shim,
   lib,
 }:
+
 stdenv.mkDerivation rec {
   pname = "QuickQ";
   version = "1.0";
@@ -43,7 +43,6 @@ stdenv.mkDerivation rec {
     cups
     dbus
     expat
-    fontconfig
     glib
     gtk3
     gdk-pixbuf

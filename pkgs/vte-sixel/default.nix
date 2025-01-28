@@ -11,7 +11,6 @@
   glib,
   gtk3,
   gtk4,
-  gtkVersion ? "3",
   gobject-introspection,
   vala,
   python3,
@@ -23,10 +22,10 @@
   pcre2,
   cairo,
   fribidi,
+  cmake,
   lz4,
   icu,
   systemd,
-  systemdSupport ? lib.meta.availableOn stdenv.hostPlatform systemd,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -36,14 +35,15 @@ stdenv.mkDerivation (finalAttrs: {
   outputs = [
     "out"
     "dev"
-  ] ++ lib.optional (gtkVersion != null) "devdoc";
+    "devdoc"
+  ];
   src = fetchFromGitLab {
     domain = "gitlab.gnome.org";
     owner = "GNOME";
     repo = "vte";
     rev = "3c8f66be867aca6656e4109ce880b6ea7431b895";
     hash = "sha256-vz9ircmPy2Q4fxNnjurkgJtuTSS49rBq/m61p1B43eU=";
-  }; #Piggybacking off of blackbox_terminal in nixpkgs
+  }; # Piggybacking off of blackbox_terminal in nixpkgs
 
   patches = [
     # VTE needs a small patch to work with musl:
@@ -63,33 +63,29 @@ stdenv.mkDerivation (finalAttrs: {
     libxml2
     meson
     ninja
+    cmake
     pkg-config
     vala
     python3
     gi-docgen
   ];
 
-  buildInputs =
-    [
-      cairo
-      fribidi
-      gnutls
-      libsixel
-      pango # duplicated with propagatedBuildInputs to support gtkVersion == null
-      pcre2
-      lz4
-      icu
-    ]
-    ++ lib.optionals systemdSupport [
-      systemd
-    ];
+  buildInputs = [
+    cairo
+    fribidi
+    gnutls
+    libsixel
+    pango # duplicated with propagatedBuildInputs to support gtkVersion == null
+    pcre2
+    lz4
+    icu
+    systemd
+  ];
 
   # Required by vte-2.91.pc.
-  propagatedBuildInputs = lib.optionals (gtkVersion != null) [
-    (
-      assert (gtkVersion == "3" || gtkVersion == "4");
-      if gtkVersion == "3" then gtk3 else gtk4
-    )
+  propagatedBuildInputs = [
+    gtk3
+    gtk4
     glib
     pango
   ];
@@ -97,12 +93,7 @@ stdenv.mkDerivation (finalAttrs: {
   mesonFlags =
     [
       "-Ddocs=true"
-      (lib.mesonBool "gtk3" (gtkVersion == "3"))
-      (lib.mesonBool "gtk4" (gtkVersion == "4"))
       "-Dsixel=true"
-    ]
-    ++ lib.optionals (!systemdSupport) [
-      "-D_systemd=false"
     ]
     ++ lib.optionals stdenv.hostPlatform.isDarwin [
       # -Bsymbolic-functions is not supported on darwin

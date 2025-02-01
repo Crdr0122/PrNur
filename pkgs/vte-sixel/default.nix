@@ -11,6 +11,7 @@
   glib,
   gtk3,
   gtk4,
+  gtkVersion ? "3",
   gobject-introspection,
   vala,
   python3,
@@ -22,7 +23,6 @@
   pcre2,
   cairo,
   fribidi,
-  cmake,
   lz4,
   icu,
   systemd,
@@ -35,14 +35,13 @@ stdenv.mkDerivation (finalAttrs: {
   outputs = [
     "out"
     "dev"
-    "devdoc"
-  ];
+  ] ++ lib.optional (gtkVersion != null) "devdoc";
   src = fetchFromGitLab {
     domain = "gitlab.gnome.org";
     owner = "GNOME";
     repo = "vte";
-    rev = "3c8f66be867aca6656e4109ce880b6ea7431b895";
-    hash = "sha256-vz9ircmPy2Q4fxNnjurkgJtuTSS49rBq/m61p1B43eU=";
+    rev = "0d76a20a4ef82011727f40cf14ddb35eacabb99d";
+    hash = "sha256-UNvMYoFd9zYDw5HwC7ZT9jIBQv5ZBr4XPczBkXTDVoc=";
   }; # Piggybacking off of blackbox_terminal in nixpkgs
 
   patches = [
@@ -63,29 +62,31 @@ stdenv.mkDerivation (finalAttrs: {
     libxml2
     meson
     ninja
-    cmake
     pkg-config
     vala
     python3
     gi-docgen
   ];
 
-  buildInputs = [
-    cairo
-    fribidi
-    gnutls
-    libsixel
-    pango # duplicated with propagatedBuildInputs to support gtkVersion == null
-    pcre2
-    lz4
-    icu
-    systemd
-  ];
+  buildInputs =
+    [
+      cairo
+      fribidi
+      gnutls
+      libsixel
+      pango # duplicated with propagatedBuildInputs to support gtkVersion == null
+      pcre2
+      lz4
+      icu
+      systemd
+    ];
 
   # Required by vte-2.91.pc.
-  propagatedBuildInputs = [
-    gtk3
-    gtk4
+  propagatedBuildInputs = lib.optionals (gtkVersion != null) [
+    (
+      assert (gtkVersion == "3" || gtkVersion == "4");
+      if gtkVersion == "3" then gtk3 else gtk4
+    )
     glib
     pango
   ];
@@ -93,6 +94,8 @@ stdenv.mkDerivation (finalAttrs: {
   mesonFlags =
     [
       "-Ddocs=true"
+      (lib.mesonBool "gtk3" (gtkVersion == "3"))
+      (lib.mesonBool "gtk4" (gtkVersion == "4"))
       "-Dsixel=true"
     ]
     ++ lib.optionals stdenv.hostPlatform.isDarwin [

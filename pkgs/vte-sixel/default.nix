@@ -40,8 +40,8 @@ stdenv.mkDerivation (finalAttrs: {
     domain = "gitlab.gnome.org";
     owner = "GNOME";
     repo = "vte";
-    rev = "0d76a20a4ef82011727f40cf14ddb35eacabb99d";
-    hash = "sha256-UNvMYoFd9zYDw5HwC7ZT9jIBQv5ZBr4XPczBkXTDVoc=";
+    rev = "3c8f66be867aca6656e4109ce880b6ea7431b895";
+    hash = "sha256-vz9ircmPy2Q4fxNnjurkgJtuTSS49rBq/m61p1B43eU=";
   }; # Piggybacking off of blackbox_terminal in nixpkgs
 
   patches = [

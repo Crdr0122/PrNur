@@ -23,5 +23,6 @@ rec {
   # wechat-uos = pkgs.callPackage ./pkgs/wechat-uos { };
   quickq = pkgs.callPackage ./pkgs/quickq { };
   wooz = pkgs.callPackage ./pkgs/wooz { };
+  yazi_test = pkgs.callPackage ./pkgs/yazi { };
   # ...
 }

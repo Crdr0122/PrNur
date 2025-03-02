@@ -20,10 +20,8 @@ rec {
   beatoraja = pkgs.callPackage ./pkgs/beatoraja { libjportaudio = libjportaudio; };
   libjportaudio = pkgs.callPackage ./pkgs/libjportaudio { };
   vte-sixel = pkgs.callPackage ./pkgs/vte-sixel { };
-  # wechat-uos = pkgs.callPackage ./pkgs/wechat-uos { };
   quickq = pkgs.callPackage ./pkgs/quickq { };
   wooz = pkgs.callPackage ./pkgs/wooz { };
-  yazi = pkgs.callPackage ./pkgs/yazi { };
-  yazi-unwrapped = pkgs.callPackage ./pkgs/yazi-unwrapped { };
+  yazi_test = pkgs.callPackage ./pkgs/yazi-unwrapped { };
   # ...
 }

@@ -3,7 +3,7 @@
   fetchFromGitHub,
   lib,
 
-
+  file,
   installShellFiles,
   stdenv,
   rust-jemalloc-sys,
@@ -28,7 +28,10 @@ rustPlatform.buildRustPackage rec {
   env.VERGEN_BUILD_DATE = "2025-02-11";
 
   nativeBuildInputs = [ installShellFiles ];
-  buildInputs = [ rust-jemalloc-sys ];
+  buildInputs = [
+    rust-jemalloc-sys
+    file
+  ];
 
   postInstall = ''
     installShellCompletion --cmd yazi \

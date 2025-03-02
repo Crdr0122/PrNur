@@ -1,49 +1,98 @@
 {
-  rustPlatform,
-  fetchFromGitHub,
   lib,
+  formats,
+  runCommand,
+  makeWrapper,
 
-  installShellFiles,
-  stdenv,
-  rust-jemalloc-sys,
+  extraPackages ? [ ],
+  optionalDeps ? [
+    jq
+    poppler-utils
+    _7zz
+    ffmpeg
+    fd
+    ripgrep
+    fzf
+    zoxide
+    imagemagick
+    chafa
+  ],
+
+  # deps
+  file,
+  yazi-unwrapped,
+
+  # optional deps
+  jq,
+  poppler-utils,
+  _7zz,
+  ffmpeg,
+  fd,
+  ripgrep,
+  fzf,
+  zoxide,
+  imagemagick,
+  chafa,
+
+  settings ? { },
+  plugins ? { },
+  flavors ? { },
+  initLua ? null,
 }:
 
-rustPlatform.buildRustPackage rec {
-  pname = "yazi";
-  version = "25.2.11";
+let
+  runtimePaths = [ file ] ++ optionalDeps ++ extraPackages;
 
-  src = fetchFromGitHub {
-    owner = "sxyazi";
-    repo = "yazi";
-    rev = "v${version}";
-    hash = "sha256-yVpSoEmEA+/XF/jlJqKdkj86m8IZLAbrxDxz5ZnmP78=";
-  };
+  settingsFormat = formats.toml { };
 
-  useFetchCargoVendor = true;
-  cargoHash = "sha256-AfXi68PNrYj6V6CYIPZT0t2l5KYTYrIzJgrcEPLW8FM=";
+  files = [
+    "yazi"
+    "theme"
+    "keymap"
+  ];
 
-  env.YAZI_GEN_COMPLETIONS = true;
-  env.VERGEN_GIT_SHA = "Nixpkgs";
-  env.VERGEN_BUILD_DATE = "2025-02-11";
+  configHome =
+    if (settings == { } && initLua == null && plugins == { } && flavors == { }) then
+      null
+    else
+      runCommand "YAZI_CONFIG_HOME" { } ''
+        mkdir -p $out
+        ${lib.concatMapStringsSep "\n" (
+          name:
+          lib.optionalString (settings ? ${name} && settings.${name} != { }) ''
+            ln -s ${settingsFormat.generate "${name}.toml" settings.${name}} $out/${name}.toml
+          ''
+        ) files}
 
-  nativeBuildInputs = [ installShellFiles ];
-  buildInputs = [ rust-jemalloc-sys ];
+        mkdir $out/plugins
+        ${lib.optionalString (plugins != { }) ''
+          ${lib.concatStringsSep "\n" (
+            lib.mapAttrsToList (name: value: "ln -s ${value} $out/plugins/${name}") plugins
+          )}
+        ''}
 
-  postInstall = ''
-    installShellCompletion --cmd yazi \
-      --bash ./yazi-boot/completions/yazi.bash \
-      --fish ./yazi-boot/completions/yazi.fish \
-      --zsh  ./yazi-boot/completions/_yazi
+        mkdir $out/flavors
+        ${lib.optionalString (flavors != { }) ''
+          ${lib.concatStringsSep "\n" (
+            lib.mapAttrsToList (name: value: "ln -s ${value} $out/flavors/${name}") flavors
+          )}
+        ''}
 
-    install -Dm444 assets/yazi.desktop -t $out/share/applications
-    install -Dm444 assets/logo.png $out/share/pixmaps/yazi.png
-  '';
 
-  passthru.updateScript.command = [ ./update.sh ];
+        ${lib.optionalString (initLua != null) "ln -s ${initLua} $out/init.lua"}
+      '';
+in
+runCommand yazi-unwrapped.name
+  {
+    inherit (yazi-unwrapped) pname version meta;
 
-  meta = {
-    description = "Blazing fast terminal file manager written in Rust, based on async I/O";
-    homepage = "https://github.com/sxyazi/yazi";
-    license = lib.licenses.mit;
-  };
-}
+    nativeBuildInputs = [ makeWrapper ];
+  }
+  ''
+    mkdir -p $out/bin
+    ln -s ${yazi-unwrapped}/share $out/share
+    ln -s ${yazi-unwrapped}/bin/ya $out/bin/ya
+    makeWrapper ${yazi-unwrapped}/bin/yazi $out/bin/yazi \
+      --prefix PATH : ${lib.makeBinPath runtimePaths} \
+      ${lib.optionalString (configHome != null) "--set YAZI_CONFIG_HOME ${configHome}"}
+  ''

@@ -23,5 +23,6 @@ rec {
   quickq = pkgs.callPackage ./pkgs/quickq { };
   wooz = pkgs.callPackage ./pkgs/wooz { };
   yazi_test = pkgs.callPackage ./pkgs/yazi-unwrapped { };
+  hyprMonocle = pkgs.callPackage ./pkgs/hyprMonocle { };
   # ...
 }

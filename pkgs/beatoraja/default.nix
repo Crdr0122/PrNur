@@ -15,7 +15,7 @@ let
   version = "0.8.8";
   fullName = "beatoraja${version}-modernchic";
   startupScript = writeShellScript "beatoraja.sh" ''
-    export _JAVA_OPTIONS='-Dsun.java2d.opengl=true -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
+    export _JAVA_OPTIONS='-Djdk.gtk.version=2 -Dsun.java2d.opengl=true -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
     dataDir="''${XDG_DATA_HOME:-$HOME/.local/share}/beatoraja"
     if [ ! -d "$dataDir" ]; then
       mkdir -p "$dataDir"

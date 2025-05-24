@@ -21,8 +21,7 @@ rec {
   libjportaudio = pkgs.callPackage ./pkgs/libjportaudio { };
   vte-sixel = pkgs.callPackage ./pkgs/vte-sixel { };
   quickq = pkgs.callPackage ./pkgs/quickq { };
-  wooz = pkgs.callPackage ./pkgs/wooz { };
   yazi_test = pkgs.callPackage ./pkgs/yazi-unwrapped { };
-  hyprMonocle = pkgs.callPackage ./pkgs/hyprMonocle { };
+  taskstodo = pkgs.callPackage ./pkgs/taskstodo { };
   # ...
 }
